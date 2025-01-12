@@ -1,1 +1,1 @@
-# LifeMC---Bank
+# LifeMC-Bank
