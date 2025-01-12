@@ -10,10 +10,9 @@ class BankSystem(commands.Cog):
         self.bot = bot
         self.filename = 'bank_data.json'
         self.bank_data = self.load_bank_data()
-        self.interest_rate = 5  # Процентная ставка по умолчанию (в % годовых)
+        self.interest_rate = 5  # Процентная ставка
 
     def load_bank_data(self):
-        """Загружает данные из файла."""
         if os.path.exists(self.filename):
             try:
                 with open(self.filename, 'r') as f:
@@ -24,7 +23,6 @@ class BankSystem(commands.Cog):
         return {}
 
     def save_bank_data(self):
-        """Сохраняет данные в файл."""
         try:
             with open(self.filename, 'w') as f:
                 json.dump(self.bank_data, f, indent=4)
@@ -32,7 +30,6 @@ class BankSystem(commands.Cog):
             print(f"Ошибка при сохранении файла: {e}")
 
     def calculate_interest(self, user_id):
-        """Начисляет проценты на вклад."""
         user_data = self.bank_data.get(user_id, {})
         deposit = user_data.get("deposit", 0)
         last_update = user_data.get("last_update")
