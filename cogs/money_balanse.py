@@ -27,20 +27,6 @@ class BankBalance(commands.Cog):
         except IOError as e:
             print(f"Ошибка при сохранении файла: {e}")
 
-    @commands.slash_command(description="Отображает балансы всех участников (без ботов).")
-    async def bank_balance(self, inter):
-
-        members = [member for member in inter.guild.members if not member.bot]
-        
-        embed = disnake.Embed(title="Баланс участников", color=disnake.Color.blue())
-        
-        for member in members:
-            balance = self.balances.get(str(member.id), 0)  # Начальный баланс 0
-            embed.add_field(name=member.name, value=f"Баланс: {balance} ₽", inline=False)
-            
-        embed.set_footer(text=f"Запросил: {inter.author.name}", icon_url=inter.author.avatar.url)
-        await inter.send(embed=embed)
-
     @commands.slash_command(description="Добавляет деньги на счёт участника.")
     async def add_money(self, inter, member: disnake.Member = Option(name="member", description="Участник", required=True), amount: int = Option(name="amount", description="Сумма, на которую увеличим баланс", required=True)):
         """Команда для добавления денег на счёт участника."""
