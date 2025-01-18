@@ -4,13 +4,14 @@ from disnake import Option
 import json
 import os
 from datetime import datetime, timedelta
+from disnake.ext.commands import has_role
 
 class BankSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.filename = 'bank_data.json'
         self.bank_data = self.load_bank_data()
-        self.interest_rate = 5  # Процентная ставка
+        self.interest_rate = 5  # Процентная ставка по умолчанию (в % годовых)
 
     def load_bank_data(self):
         if os.path.exists(self.filename):
@@ -47,6 +48,7 @@ class BankSystem(commands.Cog):
                 self.save_bank_data()
 
     @commands.slash_command(description="Проверить баланс и вклад участника.")
+    @has_role(1327671090738237512)
     async def balance(self, inter):
         user_id = str(inter.author.id)
         self.calculate_interest(user_id)
@@ -62,6 +64,7 @@ class BankSystem(commands.Cog):
         await inter.send(embed=embed)
 
     @commands.slash_command(description="Положить деньги на вклад.")
+    @has_role(1327671090738237512)
     async def deposit_money(self, inter, amount: int = Option(name="amount", description="Сумма вклада", required=True)):
         user_id = str(inter.author.id)
         self.calculate_interest(user_id)
@@ -86,6 +89,7 @@ class BankSystem(commands.Cog):
         await inter.send(embed=embed)
 
     @commands.slash_command(description="Снять деньги с вклада.")
+    @has_role(1327671090738237512)
     async def withdraw_deposit(self, inter):
         user_id = str(inter.author.id)
         self.calculate_interest(user_id)
@@ -110,7 +114,7 @@ class BankSystem(commands.Cog):
         await inter.send(embed=embed)
 
     @commands.slash_command(description="Установить процентную ставку для вкладов (только для администраторов).")
-    @commands.has_permissions(administrator=True)
+    @has_role(1327671090738237512)
     async def set_interest_rate(self, inter, rate: float = Option(name="rate", description="Процентная ставка (в % годовых)", required=True)):
         if rate < 0:
             await inter.send("Процентная ставка не может быть отрицательной.")
@@ -122,3 +126,4 @@ class BankSystem(commands.Cog):
 # Добавляем Cog в бота
 def setup(bot):
     bot.add_cog(BankSystem(bot))
+
